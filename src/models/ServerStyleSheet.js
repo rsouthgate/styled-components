@@ -43,6 +43,14 @@ class ServerTag implements Tag {
     if (name) this.names.push(name)
   }
 
+  eject() {
+    throw new Error('Eject not implemented')
+  }
+
+  removeComponent() {
+    throw new Error('RemoveComponent not implemented')
+  }
+
   toHTML() {
     const attrs = [
       'type="text/css"',

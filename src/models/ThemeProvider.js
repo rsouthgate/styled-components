@@ -49,7 +49,14 @@ class ThemeProvider extends Component {
   }
 
   componentWillReceiveProps(nextProps: ThemeProviderProps) {
-    if (this.props.theme !== nextProps.theme) this.broadcast.publish(this.getTheme(nextProps.theme))
+    if (this.props.theme !== nextProps.theme) {
+      const oldTheme = this.getTheme(this.props.theme)
+      const unmount: Function = (oldTheme.unmount: any)
+      if (isFunction(unmount)) {
+        unmount.apply(null)
+      }
+      this.broadcast.publish(this.getTheme(nextProps.theme))
+    }
   }
 
   componentWillUnmount() {

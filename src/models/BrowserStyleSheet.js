@@ -58,6 +58,11 @@ class BrowserTag implements Tag {
     this.components[componentId] = comp
   }
 
+  removeComponent(componentId: string) {
+    this.size -= 1
+    delete this.components[componentId]
+  }
+
   inject(componentId: string, css: string, name: ?string) {
     if (!this.ready) this.replaceElement()
     const comp = this.components[componentId]
@@ -66,6 +71,23 @@ class BrowserTag implements Tag {
     if (comp.textNode.data === '') comp.textNode.appendData(`\n/* sc-component-id: ${componentId} */\n`)
 
     comp.textNode.appendData(css)
+    if (name) {
+      const existingNames = this.el.getAttribute(SC_ATTR)
+      this.el.setAttribute(SC_ATTR, existingNames ? `${existingNames} ${name}` : name)
+
+      if (typeof window !== 'undefined' && window.__webpack_nonce__) {
+        this.el.setAttribute('nonce', window.__webpack_nonce__)
+      }
+    }
+  }
+
+  eject(componentId: string, name: ?string) {
+    const comp = this.components[componentId]
+
+    if (!comp) return
+    comp.textNode.data = null
+    delete comp.textNode
+    // TODO remove the name from the attr
     if (name) {
       const existingNames = this.el.getAttribute(SC_ATTR)
       this.el.setAttribute(SC_ATTR, existingNames ? `${existingNames} ${name}` : name)

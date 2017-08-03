@@ -14,6 +14,8 @@ export interface Tag {
   isFull(): boolean,
   addComponent(componentId: string): void,
   inject(componentId: string, css: string, name: ?string): void,
+  eject(componentId: string, name: ?string): void,
+  removeComponent(componentId: string): void,
   toHTML(): string,
   toReactElement(key: string): React.Element<*>,
   clone(): Tag,
@@ -103,6 +105,23 @@ export default class StyleSheet {
     }
   }
 
+  eject(componentId: string, isLocal: boolean, css: string, hash: ?any, name: ?string) {
+    if (this === instance) {
+      clones.forEach(clone => {
+        clone.eject(componentId, isLocal, css)
+      })
+    }
+
+    const tag = this.getOrCreateTag(componentId, isLocal)
+
+    tag.eject(componentId, name)
+    this.removeTag(componentId)
+
+    if (hash && name) {
+      delete this.hashes[hash.toString()]
+    }
+  }
+
   toHTML() {
     return this.tags.map(tag => tag.toHTML()).join('')
   }
@@ -124,6 +143,11 @@ export default class StyleSheet {
     this.componentTags[componentId] = componentTag
     componentTag.addComponent(componentId)
     return componentTag
+  }
+
+  removeTag(componentId: string) {
+    this.componentTags[componentId].removeComponent(componentId)
+    delete this.componentTags[componentId]
   }
 
   createNewTag(isLocal: boolean) {

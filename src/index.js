@@ -14,6 +14,7 @@ import _ComponentStyle from './models/ComponentStyle'
 import _styled from './constructors/styled'
 import _keyframes from './constructors/keyframes'
 import _injectGlobal from './constructors/injectGlobal'
+import _ejectGlobal from './constructors/ejectGlobal'
 import _constructWithOptions from './constructors/constructWithOptions'
 
 /* Import components */
@@ -30,6 +31,7 @@ const StyledComponent = _StyledComponent(ComponentStyle, constructWithOptions)
 /* Instantiate exported singletons */
 const keyframes = _keyframes(generateAlphabeticName, stringifyRules, css)
 const injectGlobal = _injectGlobal(stringifyRules, css)
+const ejectGlobal = _ejectGlobal(stringifyRules, css)
 const styled = _styled(StyledComponent, constructWithOptions)
 
 /* Export everything */
@@ -38,6 +40,7 @@ export {
   css,
   keyframes,
   injectGlobal,
+  ejectGlobal,
   ThemeProvider,
   withTheme,
   ServerStyleSheet,
